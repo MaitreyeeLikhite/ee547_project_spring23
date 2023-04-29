@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome User</title>
+</head>
+<body>
+  <h1>Welcome <%= user.name %>!</h1>
+  <p>Phone: <%= user.phone %></p>
+  <p>Email: <%= user.email %></p>
+  <form method="POST" action="/user-logout">
+    <button type="submit">Logout</button>
+  </form>
+</body>
+</html>

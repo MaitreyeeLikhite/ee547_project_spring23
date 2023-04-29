@@ -146,7 +146,15 @@ app.get('/logout', (req, res) => {
     req.session.adminLoggedIn = false;
     res.render('logout');
   });
+app.get('/user-logout', (req, res) => {
+    // Unset adminLoggedIn property in the session
   
+    res.render('user-logout');
+  });
+  app.post('/user-logout', (req, res) => {
+    // Perform any necessary logout actions
+    res.redirect('/');
+  });
   // Handle logout
   app.post('/logout', (req, res) => {
     // Perform any necessary logout actions
@@ -154,20 +162,10 @@ app.get('/logout', (req, res) => {
     req.session.adminLoggedIn = false;
     res.redirect('/');
   });
+  
 // Serve static files from the "public" directory
 app.use(express.static('public'));
-// Handle GET request to view user details
-// app.get('/details', (req, res) => {
-//     // Retrieve user details from the database
-//     User.find()
-//       .then((users) => {
-//         res.render('details', { users });
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//         res.redirect('/add-users');
-//       });
-//   });
+
 app.get('/details', checkAdminAuthentication, (req, res) => {
     // Retrieve user details from the database
     User.find()
@@ -177,6 +175,47 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
       .catch((error) => {
         console.error(error);
         res.redirect('/add-users');
+      });
+  });
+  app.post('/user-login', (req, res) => {
+    const { email, password } = req.body;
+  
+    // Find the user in the MongoDB database
+    User.findOne({ email, password })
+      .then((user) => {
+        if (user) {
+          // User found, render the welcome page with user details
+          res.render('welcomeUser', { user });
+        } else {
+          // User not found, redirect to the welcome page
+          res.redirect('/');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.redirect('/');
+      });
+  });
+  app.get('/user-login', (req, res) => {
+    res.render('userLogin');
+  });
+  app.post('/user-authentication', (req, res) => {
+    const { email, password } = req.body;
+  
+    // Find the user in the MongoDB database
+    User.findOne({ email, password })
+      .then((user) => {
+        if (user) {
+          // User found, render the welcomeUser page with user details
+          res.render('welcomeUser', { user });
+        } else {
+          // User not found or incorrect credentials, redirect to the welcome page
+          res.redirect('/');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.redirect('/');
       });
   });
   
