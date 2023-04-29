@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Management Application</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,600;1,700&display=swap" rel="stylesheet">
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <!----- HEADER ----->
+    <section class="sub-header">
+        <nav>
+            <a href="index.html"><img src="images/logo.png"></a>
+            <div class="nav-links" id="navLinks">
+                <i class="fa fa-times" onclick="hideMenu()"></i>
+                <ul>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="about.html">ABOUT</a></li>
+                    <li><a href="gallery.html">GALLERY & FLOOR PLANS</a></li>
+                    <li><a href="services.html">SERVICES</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                    <li><a href="">CURRENT RESIDENTS</a></li>
+                </ul>
+            </div>
+            <i class="fa fa-bars" onclick="showMenu()"></i>
+        </nav>
+        <h1>Services</h1>
+    </section>
+
+    <!----- SERVICES Content ----->
+    <section class="services-content">
+        <div class="row">
+            <div class="services-left">
+                <img src="images/cleaning.jpg">
+                <h2>Cleaning & Fumigation</h2>
+                <p>Experienced and fully-equipped housekeeping professionals perform 
+                    the cleaning and fumigation of the apartments. The residents can choose the date 
+                    and time for the service, and it can be weekly, bi-weekly, or monthly. The on-site 
+                    manager can schedule the services, and reschedule option is available too.
+                    <br>Fred Leeds Properties and Fred Leeds Asset Group leverage our extensive, 
+                    multi-decade experience managing multi-family and commercial properties across 
+                    California, Arizona and New York to develop a platform that adds value to all areas of our involvement.
+                    <br>Transparently operated and with a client-first approach, we are focused on maximizing the value of 
+                    your assets by offering first rate services and tools. We work with each property owner to implement a 
+                    comprehensive approach to asset and investment value maximization and performance.
+                    <br>Our residents know they can rely on courtesy, professionalism, and responsiveness to resident issues. 
+                    In recognizing that everyone exercises a choice as to where they live, we strive to provide our residents 
+                    with exceptional value.
+                </p>
+            </div>
+            <div class="services-right">
+                <h3>Other Services</h3>
+                <div>
+                    <span>5% management fee</span>
+                </div>
+                <div>
+                    <span>Dedicated property supervisor and management team</span>
+                </div>
+                <div>
+                    <span>Full in-house maintenance team, costs are well below market</span>
+                </div>
+                <div>
+                    <span>Fully equipped leasing team for Zillow and other rental platforms</span>
+                </div>
+                <div>
+                    <span>Owner interface for live updates on daily activities of property</span>
+                </div>
+                <div class="comment-box">
+                    <h3>Leave a Comment</h3>
+                    <form class="comment-form">
+                        <input type="text" placeholder="Enter Name">
+                        <input type="email" placeholder="Enter Email">
+                        <textarea rows="5" placeholder="Your Comment"></textarea>
+                        <button type="submit" class="hero-btn red-btn">POST COMMENT</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!----- FOOTER ----->
+    <section class="footer">
+        <h4>About Us</h4>
+        <p>Our apartment housing management group is an established property management company<br> 
+            that represents California, Arizona, and New York with quality, professionalism, and integrity.
+        </p>
+        <div class="icons">
+            <i class="fa fa-facebook"></i>
+            <i class="fa fa-twitter"></i>
+            <i class="fa fa-instagram"></i>
+            <i class="fa fa-linkedin"></i>
+        </div>
+        <p>Made with <i class="fa fa-heart-o"></i> by Group 3 in EE 547 Spring 2023 at USC Viterbi</p>
+    </section>
+
+    <!----- JavaScript for Toggle Menu ----->
+    <script>
+        var navLinks = document.getElementById("navLinks");
+        function showMenu(){
+            navLinks.style.right = "0";
+        }
+        function hideMenu(){
+            navLinks.style.right = "-200px";
+        }
+    </script>
+
+</body>
+
+</html>
