@@ -20,35 +20,33 @@
             <div class="nav-links" id="navLinks">
                 <i class="fa fa-times" onclick="hideMenu()"></i>
                 <ul>
-                    <li><a href="index.html">HOME</a></li>
-                    <li><a href="about.html">ABOUT</a></li>
-                    <li><a href="gallery.html">GALLERY & FLOOR PLANS</a></li>
-                    <li><a href="services.html">SERVICES</a></li>
-                    <li><a href="contact.html">CONTACT</a></li>
-                    <li><a href="residents.html">CURRENT RESIDENTS</a></li>
+                    <li><a href="payment.html">PAYMENT</a></li>
+                    <li><a href="maintenance.html">MAINTENANCE</a></li>
+                    <li><a href="residents.html">LOGOUT</a></li>
                 </ul>
             </div>
             <i class="fa fa-bars" onclick="showMenu()"></i>
         </nav>
-        <h1>Current Residents</h1>
+        <h1>Resident Dashboard</h1>
     </section>
 
-    <!----- LOGIN ----->
-    <section class="login">
-        <div class="login-box">
-            <!--<img src="images/logo.png" class="logo">-->
-            <h2>Login to Resident Dashboard</h2>
-            <!--<button><img src="images/google.png">Sign in with Google</button>
-            <button><img src="images/apple.png">Sign in with Apple</button>
-            <hr>
-            <span>Or</span>-->
-            <form>
-                <input type="text" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button type="submit" formaction="dashboard.html">Next</button>
-            </form>
-            <button type="submit" formaction="sign_up.html">Forgot password?</button>
-            <p>Don't have an account? <a href="sign_up.html">Sign up</a></p>
+    <!----- RESIDENT DASHBOARD Content ----->
+    <section class="dashboard">
+        <h1>One place for all your residential management needs!</h1>
+        <p>Make payments and submit maintenance requests on the go!</p>
+        <div class="row">
+            <div class="dashboard-col">
+                <img src="images/payment.png">
+                <div class="layer">
+                    <h3>PAYMENT</h3>
+                </div>
+            </div>
+            <div class="dashboard-col">
+                <img src="images/maintenance.png">
+                <div class="layer">
+                    <h3>MAINTENANCE</h3>
+                </div>
+            </div>
         </div>
     </section>
 

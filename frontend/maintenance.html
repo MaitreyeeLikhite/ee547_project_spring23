@@ -20,35 +20,31 @@
             <div class="nav-links" id="navLinks">
                 <i class="fa fa-times" onclick="hideMenu()"></i>
                 <ul>
-                    <li><a href="index.html">HOME</a></li>
-                    <li><a href="about.html">ABOUT</a></li>
-                    <li><a href="gallery.html">GALLERY & FLOOR PLANS</a></li>
-                    <li><a href="services.html">SERVICES</a></li>
-                    <li><a href="contact.html">CONTACT</a></li>
-                    <li><a href="residents.html">CURRENT RESIDENTS</a></li>
+                    <li><a href="payment.html">PAYMENT</a></li>
+                    <li><a href="maintenance.html">MAINTENANCE</a></li>
+                    <li><a href="residents.html">LOGOUT</a></li>
                 </ul>
             </div>
             <i class="fa fa-bars" onclick="showMenu()"></i>
         </nav>
-        <h1>Current Residents</h1>
+        <h1>Maintenance Request</h1>
     </section>
 
-    <!----- LOGIN ----->
-    <section class="login">
-        <div class="login-box">
-            <!--<img src="images/logo.png" class="logo">-->
-            <h2>Login to Resident Dashboard</h2>
-            <!--<button><img src="images/google.png">Sign in with Google</button>
-            <button><img src="images/apple.png">Sign in with Apple</button>
-            <hr>
-            <span>Or</span>-->
+    <!----- MAINTENANCE REQUEST Content ----->
+    <section class="maintenance">
+        <div class="maintenance-req-box">
+            <h2>Submit your maintenance request details and our team will contact you shortly.</h2>
             <form>
-                <input type="text" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button type="submit" formaction="dashboard.html">Next</button>
+                <input type="text" placeholder="Name">
+                <input type="number" placeholder="Apartment Number">
+                <input type="email" placeholder="Email">
+                <input type="tel" placeholder="Phone">
+                <input type="text" placeholder="Subject">
+                <textarea rows="6" name="message" placeholder="Details" required></textarea>
+                <label for="maintenance-req-image">Upload an Image:</label>
+                <input type="file" id="maintenance-req-image" name="Image Upload">
+                <button type="submit" class="hero-btn red-btn">SUBMIT REQUEST</button>
             </form>
-            <button type="submit" formaction="sign_up.html">Forgot password?</button>
-            <p>Don't have an account? <a href="sign_up.html">Sign up</a></p>
         </div>
     </section>
 
