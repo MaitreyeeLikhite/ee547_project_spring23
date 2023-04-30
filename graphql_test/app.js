@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   phone: String,
   password: String,
+  data: [String],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -27,6 +28,7 @@ const schema = buildSchema(`
     email: String
     phone: String
     password: String
+    data: [String]
   }
 
   type Query {
@@ -35,6 +37,7 @@ const schema = buildSchema(`
 
   type Mutation {
     addUser(name: String, email: String, phone: String, password: String): User
+    addUserData(userId: ID!, data: String!): User
   }
 `);
 const session = require('express-session');
@@ -51,6 +54,14 @@ const root = {
     const user = new User({ name, email, phone, password });
     return user.save();
   },
+  addUserData: ({ userId, data }) => {
+    // Find the user by ID and update the data field with the provided data
+    return User.findByIdAndUpdate(
+      userId,
+      { $push: { data: data } },
+      { new: true }
+    );
+  }
 };
 
 // Create an Express server
@@ -65,6 +76,15 @@ app.use(session({
     resave: false,
     saveUninitialized: false
   }))
+  function checkUserAuthentication(req, res, next) {
+    if (req.session.user) {
+      // User is authenticated, proceed to the next middleware or route handler
+      next();
+    } else {
+      // User is not authenticated, redirect to the welcome page
+      res.redirect('/');
+    }
+  }
 const checkAdminAuthentication = (req, res, next) => {
     // Check if admin is authenticated (using session-based authentication)
     const isLoggedIn = req.session.adminLoggedIn;
@@ -87,20 +107,7 @@ app.get('/admin', (req, res) => {
   res.render('adminLogin');
 });
 
-// Handle admin login form submission
-// app.post('/admin', (req, res) => {
-//   const password = req.body.password;
-//   if (password === 'p') {
-//     res.redirect('/add-users');
-//   } else {
-//     res.redirect('/admin');
-//   }
-// });
 
-// // Serve the add users page
-// app.get('/add-users', (req, res) => {
-//   res.render('addUsers');
-// });
 app.get('/add-users', checkAdminAuthentication, (req, res) => {
     res.render('addUsers');
   });
@@ -185,6 +192,7 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
       .then((user) => {
         if (user) {
           // User found, render the welcome page with user details
+          req.session.user = user;
           res.render('welcomeUser', { user });
         } else {
           // User not found, redirect to the welcome page
@@ -199,24 +207,56 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   app.get('/user-login', (req, res) => {
     res.render('userLogin');
   });
-  app.post('/user-authentication', (req, res) => {
-    const { email, password } = req.body;
+  app.post('/user-data', checkUserAuthentication, (req, res) => {
+    const { data } = req.body;
   
     // Find the user in the MongoDB database
-    User.findOne({ email, password })
+    User.findOne({ email: req.session.user.email })
       .then((user) => {
         if (user) {
-          // User found, render the welcomeUser page with user details
-          res.render('welcomeUser', { user });
+          // Update the user's data list
+          user.data.push(data);
+          return user.save();
         } else {
-          // User not found or incorrect credentials, redirect to the welcome page
-          res.redirect('/');
+          throw new Error('User not found');
         }
+      })
+      .then(() => {
+        // Set confirmation message
+        req.session.confirmationMessage = 'Data has been updated';
+  
+        res.redirect('/welcomeUser');
       })
       .catch((error) => {
         console.error(error);
         res.redirect('/');
       });
+  });
+  app.get('/welcomeUser', checkUserAuthentication, (req, res) => {
+    const confirmationMessage = req.session.confirmationMessage;
+    // Clear the confirmation message from session
+    req.session.confirmationMessage = '';
+  
+    res.render('welcomeUser', { user: req.session.user, confirmationMessage });
+  });
+
+  app.post('/user-authentication', async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      const user = await User.findOne({ email, password }).exec();
+  
+      if (!user) {
+        console.error('User authentication failed');
+        res.redirect('/');
+      } else {
+        req.session.user = user;
+        res.render('welcomeUser', { user, confirmationMessage: null });
+      }
+    } catch (error) {
+      console.error(error);
+      res.redirect('/');
+    }
   });
   
 // Serve GraphQL API

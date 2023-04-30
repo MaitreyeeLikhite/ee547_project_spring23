@@ -7,6 +7,15 @@
   <h1>Welcome <%= user.name %>!</h1>
   <p>Phone: <%= user.phone %></p>
   <p>Email: <%= user.email %></p>
+  <form action="/user-data" method="POST">
+    <label for="data">Enter Maintenance Data:</label>
+    <input type="text" id="data" name="data" required>
+    <br>
+    <input type="submit" value="Submit">
+  </form>
+  <% if (confirmationMessage) { %>
+    <p><%= confirmationMessage %></p>
+  <% } %>
   <form method="POST" action="/user-logout">
     <button type="submit">Logout</button>
   </form>
