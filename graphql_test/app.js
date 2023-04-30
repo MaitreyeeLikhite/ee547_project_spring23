@@ -239,7 +239,22 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   
     res.render('welcomeUser', { user: req.session.user, confirmationMessage });
   });
-
+  app.get('/specdetails/:id', (req, res) => {
+    const userId = req.params.id;
+    User.findById(userId)
+      .then((user) => {
+        if (!user) {
+          console.error('User not found');
+          res.redirect('/details');
+        } else {
+          res.render('specdetails', { user });
+        }
+      })
+      .catch((err) => {
+        console.error('Error retrieving user details:', err);
+        res.redirect('/details');
+      });
+  });
   app.post('/user-authentication', async (req, res) => {
     const { email, password } = req.body;
   

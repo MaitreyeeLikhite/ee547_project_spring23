@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Specific User Details</title>
+</head>
+<body>
+  <h1>Specific User Details</h1>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Password</th>
+      <th>Maintenance Data</th>
+    </tr>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <td><%= user.phone %></td>
+      <td><%= user.password %></td>
+      <td>
+        <% if (user.data && user.data.length > 0) { %>
+          <ul>
+            <% user.data.forEach((data) => { %>
+              <li><%= data %></li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p>No data available</p>
+        <% } %>
+      </td>
+    </tr>
+  </table>
+  <form method="POST" action="/logout">
+    <button type="submit">Logout</button>
+  </form>
+  <form method="GET" action="/details">
+    <button type="submit">View Details</button>
+  </form>
+</body>
+</html>
