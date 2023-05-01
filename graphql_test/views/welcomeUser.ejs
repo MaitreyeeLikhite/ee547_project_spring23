@@ -34,6 +34,15 @@
   <% if (confirmationMessage) { %>
     <p><%= confirmationMessage %></p>
   <% } %>
+  <a href="/eventslist">View Events</a>
+  <form method="POST" action="/book-event">
+    <input type="text" name="eventName" placeholder="Event Name" required>
+    <input type="date" name="eventDate" required>
+    <input type="time" name="startTime" required>
+    <input type="time" name="endTime" required>
+    <input type="submit" value="Book Event">
+  </form>
+
   <form method="POST" action="/user-logout">
     <button type="submit">Logout</button>
   </form>

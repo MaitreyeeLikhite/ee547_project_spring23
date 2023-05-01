@@ -19,7 +19,36 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
-
+const eventSchema = new mongoose.Schema({
+    eventName: {
+      type: String,
+      required: true,
+    },
+    eventDate: {
+      type: Date,
+      required: true,
+    },
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
+      type: String,
+      required: true,
+    },
+    userName: {
+      type: String,
+      required: true,
+    },
+    userEmail: {
+      type: String,
+      required: true,
+    },
+  });
+  
+  const Event = mongoose.model('Event', eventSchema);
+  
+  module.exports = Event;
 // Define the GraphQL schema
 const schema = buildSchema(`
   type User {
@@ -107,7 +136,39 @@ app.get('/admin', (req, res) => {
   res.render('adminLogin');
 });
 
-
+app.post('/book-event', checkUserAuthentication, (req, res) => {
+    const { eventName, eventDate, startTime, endTime } = req.body;
+    const userName = req.session.user.name;
+    const userEmail = req.session.user.email;
+  
+    // Check for overlapping events
+    Event.findOne({
+      eventDate,
+      $or: [
+        { startTime: { $lt: endTime, $gte: startTime } },
+        { endTime: { $gt: startTime, $lte: endTime } },
+        { startTime: { $lte: startTime }, endTime: { $gte: endTime } },
+      ],
+    })
+      .then((event) => {
+        if (event) {
+          throw new Error('Overlap, choose another datetime');
+        } else {
+          // Create a new event
+          return Event.create({ eventName, eventDate, startTime, endTime, userName, userEmail });
+        }
+      })
+      .then(() => {
+        req.session.confirmationMessage = 'Event successfully booked';
+        res.redirect('/welcomeUser');
+      })
+      .catch((error) => {
+        console.error(error);
+        req.session.confirmationMessage = error.message;
+        res.redirect('/welcomeUser');
+      });
+  });
+  
 app.get('/add-users', checkAdminAuthentication, (req, res) => {
     res.render('addUsers');
   });
@@ -123,6 +184,23 @@ app.post('/admin', (req, res) => {
     } else {
       res.redirect('/');
     }
+  });
+  // app.js
+
+// ... (previous code)
+
+// Routes
+app.get('/eventslist', (req, res) => {
+    // Retrieve all events from the MongoDB database
+    Event.find()
+      .then((events) => {
+        // Render the eventslist.ejs view with the event data
+        res.render('eventslist', { events });
+      })
+      .catch((error) => {
+        console.error('Error retrieving events:', error);
+        res.redirect('/');
+      });
   });
   
   // Handle admin logout
