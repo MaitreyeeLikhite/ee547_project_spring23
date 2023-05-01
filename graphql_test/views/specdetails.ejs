@@ -31,6 +31,11 @@
       </td>
     </tr>
   </table>
+  <h2>Add Data</h2>
+  <form method="POST" action="/add-data/<%= user._id %>">
+    <input type="text" name="data" placeholder="Enter data" required>
+    <input type="submit" value="Add">
+  </form>
   <form method="POST" action="/logout">
     <button type="submit">Logout</button>
   </form>

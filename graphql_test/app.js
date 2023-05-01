@@ -207,22 +207,40 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   app.get('/user-login', (req, res) => {
     res.render('userLogin');
   });
+  app.post('/add-data/:id', (req, res) => {
+    const userId = req.params.id;
+    const newData = "Admin Response: " + req.body.data;
+    const currentDate = new Date().toLocaleString();
+    const newDataWithTimestamp = `${currentDate}: ${newData}`;
+    User.findByIdAndUpdate(userId, { $push: { data: newDataWithTimestamp } })
+      .then(() => {
+        res.redirect(`/specdetails/${userId}`);
+      })
+      .catch((err) => {
+        console.error('Error adding data:', err);
+        res.redirect('/details');
+      });
+  });
   app.post('/user-data', checkUserAuthentication, (req, res) => {
     const { data } = req.body;
-  
+    
+    const newData = `User Maintenance Request - ${data}`;
+    const currentDate = new Date().toLocaleString();
+   const newDataWithTimestamp = `${currentDate}: ${newData}`;
     // Find the user in the MongoDB database
     User.findOne({ email: req.session.user.email })
       .then((user) => {
         if (user) {
           // Update the user's data list
-          user.data.push(data);
+          user.data.push(newDataWithTimestamp);
           return user.save();
         } else {
           throw new Error('User not found');
         }
       })
-      .then(() => {
+      .then((updatedUser) => {
         // Set confirmation message
+        req.session.user = updatedUser;
         req.session.confirmationMessage = 'Data has been updated';
   
         res.redirect('/welcomeUser');

@@ -7,6 +7,24 @@
   <h1>Welcome <%= user.name %>!</h1>
   <p>Phone: <%= user.phone %></p>
   <p>Email: <%= user.email %></p>
+  <table>
+    <tr>
+      <th>Maintenance History</th>
+    </tr>
+    <tr>
+      <td>
+        <% if (user.data && user.data.length > 0) { %>
+          <ul>
+            <% user.data.forEach((data) => { %>
+              <li><%= data %></li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p>No data available</p>
+        <% } %>
+      </td>
+    </tr>
+  </table>
   <form action="/user-data" method="POST">
     <label for="data">Enter Maintenance Data:</label>
     <input type="text" id="data" name="data" required>
