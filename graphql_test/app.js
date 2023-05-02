@@ -365,6 +365,16 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
         res.redirect('/details');
       });
   });
+  app.get('/viewprospective2', checkUserAuthentication, (req, res) => {
+    ProspectiveCustomer.find()
+      .then((prospectiveCustomers) => {
+        res.render('viewprospective', { prospectiveCustomers });
+      })
+      .catch((error) => {
+        console.error('Error retrieving prospective customers:', error);
+        res.redirect('/');
+      });
+  });
   app.post('/user-data', checkUserAuthentication, (req, res) => {
     const { data } = req.body;
     

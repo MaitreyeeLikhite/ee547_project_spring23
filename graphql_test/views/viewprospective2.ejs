@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>View Prospective Customers</title>
+  <style>
+    hr {
+      margin: 20px 0;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <h1>View Prospective Customers</h1>
+  <% if (prospectiveCustomers.length > 0) { %>
+  <% prospectiveCustomers.forEach((customer) => { %>
+    <div>
+      <p><strong>Name:</strong> <%= customer.name %></p>
+      <p><strong>Email:</strong> <%= customer.email %></p>
+      <p><strong>Age:</strong> <%= customer.age %></p>
+      <p><strong>Gender:</strong> <%= customer.gender %></p>
+      <p><strong>Phone Number:</strong> <%= customer.phoneNumber %></p>
+      <p><strong>Looking For:</strong> <%= customer.lookingFor %></p>
+      <p><strong>Dietary Preferences:</strong> <%= customer.dietaryPreferences %></p>
+      <p><strong>Drinks:</strong> <%= customer.drinks %></p>
+      <p><strong>Smoke:</strong> <%= customer.smoke ? 'Yes' : 'No' %></p>
+      <p><strong>Origin:</strong> <%= customer.origin %></p>
+      <p><strong>Field of Study:</strong> <%= customer.fieldOfStudy %></p>
+    </div>
+    <hr>
+    <% }); %>
+    <% } else { %>
+    <p>No prospective customers found.</p>
+  <% } %>
+  <br>
+  <a href="/"><button>Back</button></a>
+</body>
+</html>
