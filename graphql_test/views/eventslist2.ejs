@@ -1,0 +1,55 @@
+<!-- eventslist.ejs -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Events List</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Events List</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Event Name</th>
+        <th>Event Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>User Name</th>
+        <th>User Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% events.forEach((event) => { %>
+        <tr>
+          <td><%= event.eventName %></td>
+          <td><%= event.eventDate.toDateString() %></td>
+          <td><%= event.startTime %></td>
+          <td><%= event.endTime %></td>
+          <td><%= event.userName %></td>
+          <td><%= event.userEmail %></td>
+          <td>
+            <form method="POST" action="/delete-event/<%= event._id %>">
+              <button type="submit">Delete Event</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <form method="POST" action="/user-logout">
+    <button type="submit">Back to Login</button>
+  </form>
+</body>
+</html>

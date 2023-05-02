@@ -257,6 +257,18 @@ app.get('/eventslist', (req, res) => {
         res.redirect('/');
       });
   });
+  app.get('/eventslist2', (req, res) => {
+    // Retrieve all events from the MongoDB database
+    Event.find()
+      .then((events) => {
+        // Render the eventslist.ejs view with the event data
+        res.render('eventslist2', { events });
+      })
+      .catch((error) => {
+        console.error('Error retrieving events:', error);
+        res.redirect('/');
+      });
+  });
   
   // Handle admin logout
   app.get('/admin-logout', (req, res) => {
@@ -265,6 +277,26 @@ app.get('/eventslist', (req, res) => {
   
     res.redirect('/');
   });
+  // app.js
+
+// ... (previous code)
+
+// Delete Event
+app.post('/delete-event/:id', (req, res) => {
+    const eventId = req.params.id;
+  
+    Event.findByIdAndDelete(eventId)
+      .then(() => {
+        res.redirect('/eventslist2');
+      })
+      .catch((err) => {
+        console.error('Error deleting event:', err);
+        res.redirect('/eventslist2');
+      });
+  });
+  
+  // ... (remaining code)
+  
 app.post('/add-users', (req, res) => {
     const { name, email, phone, password } = req.body;
     const user = new User({ name, email, phone, password });
