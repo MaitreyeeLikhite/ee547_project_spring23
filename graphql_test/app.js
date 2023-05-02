@@ -49,6 +49,21 @@ const eventSchema = new mongoose.Schema({
   const Event = mongoose.model('Event', eventSchema);
   
   module.exports = Event;
+  const prospectiveCustomerSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    age: Number,
+    gender: String,
+    phoneNumber: Number,
+    lookingFor: [String],
+    dietaryPreferences: [String],
+    drinks: [String],
+    smoke: Boolean,
+    origin: String,
+    fieldOfStudy: String
+  });
+  
+  const ProspectiveCustomer = mongoose.model('ProspectiveCustomer', prospectiveCustomerSchema);
 // Define the GraphQL schema
 const schema = buildSchema(`
   type User {
@@ -130,7 +145,47 @@ const checkAdminAuthentication = (req, res, next) => {
 app.get('/', (req, res) => {
   res.render('welcome');
 });
-
+app.get('/enterdetails', (req, res) => {
+    res.render('enterdetails');
+  });
+app.post('/enterdetails', (req, res) => {
+    const {
+      name,
+      email,
+      age,
+      gender,
+      phoneNumber,
+      lookingFor,
+      dietaryPreferences,
+      drinks,
+      smoke,
+      origin,
+      fieldOfStudy
+    } = req.body;
+  
+    const prospectiveCustomer = new ProspectiveCustomer({
+      name,
+      email,
+      age,
+      gender,
+      phoneNumber,
+      lookingFor,
+      dietaryPreferences,
+      drinks,
+      smoke,
+      origin,
+      fieldOfStudy
+    });
+  
+    prospectiveCustomer.save()
+      .then(() => {
+        res.render('enterdetails', { confirmationMessage: 'Thank you for sharing your details, we will contact you soon!' });
+      })
+      .catch((error) => {
+        console.error(error);
+        res.redirect('/');
+      });
+  });
 // Serve the admin login page
 app.get('/admin', (req, res) => {
   res.render('adminLogin');
@@ -285,6 +340,17 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   app.get('/user-login', (req, res) => {
     res.render('userLogin');
   });
+  app.get('/viewprospective', checkAdminAuthentication, (req, res) => {
+    ProspectiveCustomer.find()
+      .then((prospectiveCustomers) => {
+        res.render('viewprospective', { prospectiveCustomers });
+      })
+      .catch((error) => {
+        console.error('Error retrieving prospective customers:', error);
+        res.redirect('/add-user');
+      });
+  });
+  
   app.post('/add-data/:id', (req, res) => {
     const userId = req.params.id;
     const newData = "Admin Response: " + req.body.data;
