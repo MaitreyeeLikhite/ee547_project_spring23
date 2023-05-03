@@ -16,8 +16,19 @@ const userSchema = new mongoose.Schema({
   phone: String,
   password: String,
   data: [String],
+  paymentHistory: {
+    type: Object,
+    of: Number,
+    default: { 'commencement': 0.0 },
+  },
 });
-
+function calculateBalance(paymentHistory) {
+    let sum = 0;
+    for (const key in paymentHistory) {
+      sum += paymentHistory[key];
+    }
+    return sum;
+  }
 const User = mongoose.model('User', userSchema);
 const eventSchema = new mongoose.Schema({
     eventName: {
@@ -436,12 +447,37 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
         res.redirect('/');
       });
   });
+  app.get('/recuser', checkUserAuthentication, (req, res) => {
+    const balance = calculateBalance(req.session.user.paymentHistory);
+    console.log(req.session.user.paymentHistory)
+    res.render('recuser', { user: req.session.user, balance });
+  });
+  
+  // Endpoint for recording a payment
+  app.post('/record-payment', checkUserAuthentication, (req, res) => {
+    const { paymentType, amount} = req.body;
+    const { user } = req.session;
+  
+    // Add the new payment to the paymentHistory dictionary
+    user.paymentHistory[paymentType] = parseFloat(amount);
+  
+    // Save the updated user document in the database
+    User.findByIdAndUpdate(user._id, { paymentHistory: user.paymentHistory })
+    .then(() => {
+        res.redirect('/welcomeUser');
+      })
+      .catch((error) => {
+        console.error('Error recording payment:', error);
+        res.redirect('/welcomeUser');
+      });
+  });
+  
   app.get('/welcomeUser', checkUserAuthentication, (req, res) => {
     const confirmationMessage = req.session.confirmationMessage;
     // Clear the confirmation message from session
     req.session.confirmationMessage = '';
   
-    res.render('welcomeUser', { user: req.session.user, confirmationMessage });
+    res.render('welcomeUser', { user: req.session.user, confirmationMessage});
   });
   app.get('/specdetails/:id', (req, res) => {
     const userId = req.params.id;
