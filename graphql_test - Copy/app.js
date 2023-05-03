@@ -95,7 +95,20 @@ const session = require('express-session');
 
 // ...
 
-
+function extractSumFromPaymentHistory(paymentHistory) {
+    let sum = 0;
+  
+    for (const payment of paymentHistory) {
+      const number = parseFloat(payment.split(':').pop().trim());
+      if (payment.startsWith('Admin:')) {
+        sum += number;
+      } else if (payment.startsWith('User:')) {
+        sum += number;
+      }
+    }
+  
+    return sum;
+  }
 // Define the root resolver
 const root = {
   getUser: ({ id }) => {
@@ -198,6 +211,54 @@ app.get('/admin', (req, res) => {
   res.render('adminLogin');
 });
 
+// app.post('/book-event', checkUserAuthentication, (req, res) => {
+//     const { eventName, eventDate, startTime, endTime } = req.body;
+//     const userName = req.session.user.name;
+//     const userEmail = req.session.user.email;
+  
+//     // Check for overlapping events
+//     Event.findOne({
+//       eventDate,
+//       $or: [
+//         { startTime: { $lt: endTime, $gte: startTime } },
+//         { endTime: { $gt: startTime, $lte: endTime } },
+//         { startTime: { $lte: startTime }, endTime: { $gte: endTime } },
+//       ],
+//     })
+//       .then((event) => {
+//         if (event) {
+//           //throw new Error('Overlap, choose another datetime');
+          
+//           return Event.find().then((events) => {
+//             res.render('eventslist', { events, confirmationMessage: 'Error: clashing' });
+//           });
+        
+//         } else {
+//           // Create a new event
+//           return Event.create({ eventName, eventDate, startTime, endTime, userName, userEmail });
+//         }
+//       })
+//       Event.find()
+//       .then((events) => {
+//         // Render the eventslist.ejs view with the event data
+//         confirmationMessage = 'Event successfully booked';
+//         res.render('eventslist', { events,confirmationMessage });
+//         return
+//       })
+//       .catch((error) => {
+//         Event.find()
+//       .then((events) => {
+//         // Render the eventslist.ejs view with the event data
+//         console.error(error);
+//         confirmationMessage = error.message;
+//         res.render('eventslist', { events,confirmationMessage:'Error' });})
+//         //res.render('eventslist', { confirmationMessage });
+//         //console.log(confirmationMessage)
+//         //res.render('eventslist', { events,confirmationMessage });
+//         //res.redirect('/welcome');
+//       });
+//   });
+  
 app.post('/book-event', checkUserAuthentication, (req, res) => {
     const { eventName, eventDate, startTime, endTime } = req.body;
     const userName = req.session.user.name;
@@ -214,23 +275,28 @@ app.post('/book-event', checkUserAuthentication, (req, res) => {
     })
       .then((event) => {
         if (event) {
-          throw new Error('Overlap, choose another datetime');
+          // Render the eventslist.ejs view with the error message
+          return Event.find().then((events) => {
+            res.render('eventslist', { events, confirmationMessage: 'Error: clashing' });
+          });
         } else {
           // Create a new event
-          return Event.create({ eventName, eventDate, startTime, endTime, userName, userEmail });
+          return Event.create({ eventName, eventDate, startTime, endTime, userName, userEmail })
+            .then(() => {
+              // Retrieve all events
+              return Event.find();
+            })
+            .then((events) => {
+              // Render the eventslist.ejs view with the success message
+              res.render('eventslist', { events, confirmationMessage: 'Event successfully booked' });
+            });
         }
       })
-      .then(() => {
-        req.session.confirmationMessage = 'Event successfully booked';
-        res.redirect('/welcomeUser');
-      })
       .catch((error) => {
-        console.error(error);
-        req.session.confirmationMessage = error.message;
-        res.redirect('/welcomeUser');
+        console.error('Error booking event:', error);
+        res.redirect('/eventslist'); // Redirect to an error page or desired destination
       });
   });
-  
 app.get('/add-users', checkAdminAuthentication, (req, res) => {
     res.render('addUsers');
   });
@@ -257,14 +323,14 @@ app.get('/eventslist', (req, res) => {
     Event.find()
       .then((events) => {
         // Render the eventslist.ejs view with the event data
-        res.render('eventslist', { events });
+        res.render('eventslist', { events,confirmationMessage: '' });
       })
       .catch((error) => {
         console.error('Error retrieving events:', error);
         res.redirect('/');
       });
   });
-  app.get('/eventslist2', (req, res) => {
+  app.get('/eventslist2', checkAdminAuthentication,(req, res) => {
     // Retrieve all events from the MongoDB database
     Event.find()
       .then((events) => {
@@ -365,7 +431,10 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
         if (user) {
           // User found, render the welcome page with user details
           req.session.user = user;
-          res.render('welcomeUser', { user });
+          const paymentHistory = user.data2;
+          console.log(paymentHistory)
+          const sum = extractSumFromPaymentHistory(paymentHistory);
+          res.render('welcomeUser', { user,sum });
         } else {
           // User not found, redirect to the welcome page
           res.redirect('/');
@@ -418,12 +487,17 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
           throw new Error('User not found');
         }
       })
-      .then((updatedUser) => {
+      .then((user) => {
         // Set confirmation message
-        req.session.user = updatedUser;
+        req.session.user = user;
         req.session.confirmationMessage = 'Data has been updated';
-  
-        res.redirect('/welcomeUser');
+
+        const paymentHistory = user.data2;
+        
+        const sum = extractSumFromPaymentHistory(paymentHistory);
+        //console.log(sum)
+        res.render('welcomeUser', { user, confirmationMessage: '', sum });
+        //res.redirect('/welcomeUser');
       })
       .catch((error) => {
         console.error(error);
@@ -432,9 +506,9 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   });
   app.post('/user-data2', checkUserAuthentication, (req, res) => {
     const { data2 } = req.body;
-    const newData = `User - ${data2}`;
+    const newData = `${data2}`;
     const currentDate = new Date().toLocaleString();
-   const newDataWithTimestamp = `${currentDate}: ${newData}`;
+   const newDataWithTimestamp = "User: "+`${currentDate}: ${newData}`;
     // Find the user in the MongoDB database
     User.findOne({ email: req.session.user.email })
       .then((user) => {
@@ -446,12 +520,17 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
           throw new Error('User not found');
         }
       })
-      .then((updatedUser) => {
+      .then((user) => {
         // Set confirmation message
-        req.session.user = updatedUser;
+        req.session.user = user;
         req.session.confirmationMessage = 'Payment Data has been updated';
-  
-        res.redirect('/welcomeUser');
+
+        const paymentHistory = user.data2;
+        
+        const sum = extractSumFromPaymentHistory(paymentHistory);
+        console.log(sum)
+        res.render('welcomeUser', { user, confirmationMessage: 'Payment Data has been updated', sum });
+        //res.redirect('/welcomeUser');
       })
       .catch((error) => {
         console.error(error);
@@ -474,19 +553,40 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   });
   app.post('/add-data2/:id', (req, res) => {
     const userId = req.params.id;
-    const newData = "Admin: -" + req.body.data2;
+    const newData = req.body.data2;
     const currentDate = new Date().toLocaleString();
-    const newDataWithTimestamp = `${currentDate}: ${newData}`;
+    let newDataWithTimestamp = `${currentDate}: `;
+    newDataWithTimestamp="Admin: "+ req.body.data2 +newDataWithTimestamp+" -"+req.body.data3;
     User.findByIdAndUpdate(userId, { $push: { data2: newDataWithTimestamp } })
       .then(() => {
+        User.findById(userId) // Retrieve the user document
+        .then((user) => {
+        const paymentHistory = user.data2;
+        console.log(paymentHistory)
+          const sum = extractSumFromPaymentHistory(paymentHistory);
+          console.log('Sum:', sum);
         res.redirect(`/specdetails/${userId}`);
-      })
+      }).catch((err) => {
+        console.error('Error retrieving user:', err);
+        res.redirect('/details');
+      });
+    })
       .catch((err) => {
         console.error('Error adding data:', err);
         res.redirect('/details');
       });
   });
-
+  app.post('/clear-payment-history/:id', checkAdminAuthentication,(req, res) => {
+    const userId = req.params.id;
+    User.findByIdAndUpdate(userId, { data2: [] })
+      .then(() => {
+        res.redirect(`/specdetails/${userId}`);
+      })
+      .catch((err) => {
+        console.error('Error clearing payment history:', err);
+        res.redirect(`/specdetails/${userId}`);
+      });
+  });
   
   
   
@@ -497,15 +597,19 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   
     res.render('welcomeUser', { user: req.session.user, confirmationMessage});
   });
-  app.get('/specdetails/:id', (req, res) => {
+  app.get('/specdetails/:id',checkAdminAuthentication, (req, res) => {
     const userId = req.params.id;
     User.findById(userId)
       .then((user) => {
+        const paymentHistory = user.data2;
+        
+          const sum = extractSumFromPaymentHistory(paymentHistory);
+
         if (!user) {
           console.error('User not found');
           res.redirect('/details');
         } else {
-          res.render('specdetails', { user });
+          res.render('specdetails', { user,sum });
         }
       })
       .catch((err) => {
@@ -524,7 +628,10 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
         res.redirect('/');
       } else {
         req.session.user = user;
-        res.render('welcomeUser', { user, confirmationMessage: null });
+        const paymentHistory = user.data2;
+        
+        const sum = extractSumFromPaymentHistory(paymentHistory);
+        res.render('welcomeUser', { user, confirmationMessage: null,sum });
       }
     } catch (error) {
       console.error(error);
