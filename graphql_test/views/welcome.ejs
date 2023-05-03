@@ -2,13 +2,198 @@
 <html>
 <head>
   <title>Welcome Page</title>
-  <link rel="stylesheet" type="text/css" href="style_sheets/welcome.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,600;1,700&display=swap" rel="stylesheet">
+  <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    
+    body {
+      font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  /* Style the heading */
+  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  /* Style the links */
+  a {
+    color: #333;
+    text-decoration: none;
+    padding: 5px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    margin: 4px;
+    width: 120px;
+  }
+  
+  a:hover {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  /* Center the links in the page */
+  body > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  </style>
 </head>
 <body>
   <h1>Welcome!</h1>
   <a href="/admin">Admin Login</a> <br>
   <a href="/user-login">User Login</a> <br>
-  <a href="/eventslist">View Events</a> <br>
-  <a href="/enterdetails">Interested ?</a> 
+          <!-- <a href="/eventslist">View Events</a> <br> -->
+          
+          <section class="header">
+            <nav>
+               
+                <div class="nav-links" id="navLinks">
+                    <i class="fa fa-times" onclick="hideMenu()"></i>
+                    <ul>
+                        
+                    </ul>
+                </div>
+                <i class="fa fa-bars" onclick="showMenu()"></i>
+            </nav>
+            <div class="text-box">
+                <h1>Trojan View, Los Angeles</h1>
+                <p> <bold>UNITS AVAILABLE:</bold> <br>
+                    Studio's /1 Bath $1595 | 2 Bed /1 Bath & 2 Bed /2 Bath Units, starting at $2,395-$2,595 <br>
+                    <bold>UNIT TYPE:</bold> <br> Studios and Two bedrooms. Very Spacious units minutes to the USC campus! <br>
+                    Lease Term: 11 Months, from August 1, 2023 - June 30, 2024
+                </p>
+                <a href="/enterdetails" class="hero-btn">Intereted?</a>
+            </div>
+        </section>
+  
+  
+  
+  
+  <section class="about">
+    <h1>A few reasons to make this your home!</h1>
+    <p>Read on to learn more about us!</p>
+    <div class="row">
+        <div class="about-col">
+            <h3>Utilities</h3>
+            <p>Utilities Included At No Charge to you: Water and Trash | 
+                Utilities Tenant Pays for: Gas and Electricity | 
+                Once you have applied online, please email TWO forms of Government Issued ID
+                (Example: Passport, Visa: for international students, Birth Certificate, Social Security
+                Card) . Also for International Students, please provide I-20 Form.</p>
+        </div>
+        <div class="about-col">
+            <h3>Location & Safety</h3>
+            <p>5-7 minute walk to Ralph's and USC Village | 7 minutes walk to USC | Gated Facility with Controlled Access | 
+                DPS Patrolled Area on Ellendale | USC Shuttle Bus Pick Up in Front of Building | 
+                16 Security Cameras in Building | Remote-Controlled Parking Lot Gate Access |</p>
+        </div>
+        <div class="about-col">
+            <h3>Amenities</h3>
+            <p>Outdoor Pool | BBQ Pit and Outdoor Picnic Area | Bike-Parking Included | 
+                1 Assigned Parking Space Included (Per Apartment) | Elevator | Wall Heater | 
+                Coin Operated on-site Washer and Dryer Laundry Room | Kitchen Appliances: Refrigerator, Stove, Oven |</p>
+        </div>
+    </div>
+  </section>
+
+  <!----- GALLERY ----->
+  <section class="gallery">
+    <h1>A sneak peek into our space!</h1>
+    <p>Here are a few pictures and floor plans for you to view!</p>
+    <div class="row">
+        <div class="gallery-col">
+            <img src="images/swimmingpool.jpg">
+            <div class="layer">
+                <h3>SWIMMING POOL</h3>
+            </div>
+        </div>
+        <div class="gallery-col">
+            <img src="images/apartments.jpg">
+            <div class="layer">
+                <h3>APARTMENTS</h3>
+            </div>
+        </div>
+        <div class="gallery-col">
+            <img src="images/barbecuegrill.jpeg">
+            <div class="layer">
+                <h3>BARBECUE GRILL</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!----- FLOOR PLANS ----->
+<section class="floorplans">
+  <!--<h1>Apartment Structure</h1>
+  <p>These are the floor plans for our 2b/1b, 2b/2b, and studio units.</p>-->
+  <div class="row">
+      <div class="floorplans-col">
+          <img src="images/2b1b.jpg">
+          <h3>2-BEDROOM/1-BATHROOM</h3>
+          <p>Rent /month: $2,395 without balcony; $2,495 with balcony</p>
+      </div>
+      <div class="floorplans-col">
+          <img src="images/2b2b.jpg">
+          <h3>2-BEDROOM/2-BATHROOM</h3>
+          <p>Rent /month: $2,495 without balcony; $2,595 with balcony</p>
+      </div>
+      <div class="floorplans-col">
+          <img src="images/studio.jpeg">
+          <h3>STUDIO</h3>
+          <p>Rent /month: $1,595 without balcony; $1,695 with balcony</p>
+      </div>
+  </div>
+</section>
+
+ <!----- REVIEWS ----->
+ <section class="reviews">
+  <h1>Hear from our past residents!</h1>
+  <p>We hope that you would also find your home with us.</p>
+  <div class="row">
+      <div class="reviews-col">
+          <img src="images/user1.jpg">
+          <div>
+              <p>Anthony and Elena were both amazing throughout the year. Whatever issue I had 
+                  (and I only had 1 in my entire lease) both Anthony and elena fixed it 
+                  quickly and professionally.
+              </p>
+              <h3>Christine Berkley</h3>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-o"></i>
+          </div>
+      </div>
+      <div class="reviews-col">
+          <img src="images/user2.jpg">
+          <div>
+              <p>Living here for there years, one of best managers and service for me. 
+                  It has been a pleasure staying at Trojan View, especially because it 
+                  is only a refreshing brisk walk away from my classes at USC.
+              </p>
+              <h3>David Byer</h3>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-o"></i>
+          </div>
+      </div>
+  </div>
+</section>
 </body>
 </html>
