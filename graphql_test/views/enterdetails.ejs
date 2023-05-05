@@ -62,19 +62,15 @@
     <form method="POST" action="/enterdetails">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
-        <br>
+        
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
-        <br>
         <label for="age">Age:</label>
         <input type="number" id="age" name="age" required>
-        <br>
         <label for="gender">Gender:</label>
         <input type="text" id="gender" name="gender" required>
-        <br>
         <label for="phoneNumber">Phone Number:</label>
         <input type="number" id="phoneNumber" name="phoneNumber" required>
-        <br>
         <label for="lookingFor">Looking For:</label>
         <input type="checkbox" id="studio" name="lookingFor" value="studio">
         <label for="studio">Studio</label>
@@ -82,7 +78,6 @@
         <label for="fullApartment">Full Apartment</label>
         <input type="checkbox" id="privateRoom" name="lookingFor" value="privateRoom">
         <label for="privateRoom">Private Room in Shared Apartment</label>
-        <br>
         <label for="dietaryPreferences">Dietary Preferences:</label>
         <input type="checkbox" id="vegan" name="dietaryPreferences" value="vegan">
         <label for="vegan">Vegan</label>
@@ -90,7 +85,6 @@
         <label for="vegetarian">Vegetarian</label>
         <input type="checkbox" id="nonVegetarian" name="dietaryPreferences" value="nonVegetarian">
         <label for="nonVegetarian">Non-Vegetarian</label>
-        <br>
         <label for="drinks">Drinks:</label>
         <input type="checkbox" id="never" name="drinks" value="never">
         <label for="never">Never</label>
@@ -98,18 +92,17 @@
         <label for="socially">Socially</label>
         <input type="checkbox" id="casually" name="drinks" value="casually">
         <label for="casually">Casually</label>
-        <br>
         <label for="smoke">Smoke:</label>
         <input type="checkbox" id="smoke" name="smoke" value="yes">
         <label for="smoke">Yes</label>
-        <br>
         <label for="origin">Origin:</label>
         <input type="text" id="origin" name="origin" required>
-        <br>
         <label for="fieldOfStudy">Field of Study:</label>
         <input type="text" id="fieldOfStudy" name="fieldOfStudy" required>
-        <br>
         <input type="submit" value="Submit">
         </form>
+        <% if (confirmationMessage) { %>
+          <h2><%= confirmationMessage %></h2>
+        <% } %>
     </body>
     </html>

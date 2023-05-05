@@ -72,28 +72,27 @@ const eventSchema = new mongoose.Schema({
   
   const ProspectiveCustomer = mongoose.model('ProspectiveCustomer', prospectiveCustomerSchema);
 // Define the GraphQL schema
-const schema = buildSchema(`
-  type User {
-    id: ID
-    name: String
-    email: String
-    phone: String
-    password: String
-    data: [String]
-  }
+// const schema = buildSchema(`
+//   type User {
+//     id: ID
+//     name: String
+//     email: String
+//     phone: String
+//     password: String
+//     data: [String]
+//   }
 
-  type Query {
-    getUser(id: ID!): User
-  }
+//   type Query {
+//     getUser(id: ID!): User
+//   }
 
-  type Mutation {
-    addUser(name: String, email: String, phone: String, password: String): User
-    addUserData(userId: ID!, data: String!): User
-  }
-`);
+//   type Mutation {
+//     addUser(name: String, email: String, phone: String, password: String): User
+//     addUserData(userId: ID!, data: String!): User
+//   }
+// `);
 const session = require('express-session');
 
-// ...
 
 function extractSumFromPaymentHistory(paymentHistory) {
     let sum = 0;
@@ -110,23 +109,23 @@ function extractSumFromPaymentHistory(paymentHistory) {
     return sum;
   }
 // Define the root resolver
-const root = {
-  getUser: ({ id }) => {
-    return User.findById(id);
-  },
-  addUser: ({ name, email, phone, password }) => {
-    const user = new User({ name, email, phone, password });
-    return user.save();
-  },
-  addUserData: ({ userId, data }) => {
-    // Find the user by ID and update the data field with the provided data
-    return User.findByIdAndUpdate(
-      userId,
-      { $push: { data: data } },
-      { new: true }
-    );
-  }
-};
+// const root = {
+//   getUser: ({ id }) => {
+//     return User.findById(id);
+//   },
+//   addUser: ({ name, email, phone, password }) => {
+//     const user = new User({ name, email, phone, password });
+//     return user.save();
+//   },
+//   addUserData: ({ userId, data }) => {
+//     // Find the user by ID and update the data field with the provided data
+//     return User.findByIdAndUpdate(
+//       userId,
+//       { $push: { data: data } },
+//       { new: true }
+//     );
+//   }
+// };
 
 // Create an Express server
 const app = express();
@@ -140,6 +139,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
   }))
+
   function checkUserAuthentication(req, res, next) {
     if (req.session.user) {
       // User is authenticated, proceed to the next middleware or route handler
@@ -166,7 +166,7 @@ app.get('/', (req, res) => {
   res.render('welcome');
 });
 app.get('/enterdetails', (req, res) => {
-    res.render('enterdetails');
+    res.render('enterdetails',{ confirmationMessage: ''});
   });
 app.post('/enterdetails', (req, res) => {
     const {
@@ -352,7 +352,7 @@ app.get('/eventslist', (req, res) => {
   });
   // app.js
 
-// ... (previous code)
+
 
 // Delete Event
 app.post('/delete-event/:id', (req, res) => {
@@ -392,12 +392,10 @@ app.get('/logout', (req, res) => {
     res.render('logout');
   });
 app.get('/user-logout', (req, res) => {
-    // Unset adminLoggedIn property in the session
   
     res.render('user-logout');
   });
   app.post('/user-logout', (req, res) => {
-    // Perform any necessary logout actions
     res.redirect('/');
   });
   // Handle logout
@@ -458,7 +456,6 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
         res.redirect('/add-user');
       });
   });
-  
   
   app.get('/viewprospective2', checkUserAuthentication, (req, res) => {
     ProspectiveCustomer.find()
@@ -556,7 +553,7 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
     const newData = req.body.data2;
     const currentDate = new Date().toLocaleString();
     let newDataWithTimestamp = `${currentDate}: `;
-    newDataWithTimestamp="Admin: "+ req.body.data2 +newDataWithTimestamp+" -"+req.body.data3;
+    newDataWithTimestamp="Admin: "+ req.body.data2 + " " + newDataWithTimestamp+" -"+req.body.data3;
     User.findByIdAndUpdate(userId, { $push: { data2: newDataWithTimestamp } })
       .then(() => {
         User.findById(userId) // Retrieve the user document
@@ -640,11 +637,11 @@ app.get('/details', checkAdminAuthentication, (req, res) => {
   });
   
 // Serve GraphQL API
-app.use('/graphql', graphqlHTTP({
-  schema: schema,
-  rootValue: root,
-  graphiql: true,
-}));
+// app.use('/graphql', graphqlHTTP({
+//   schema: schema,
+//   rootValue: root,
+//   graphiql: true,
+// }));
 
 // Start the server
 app.listen(3000, () => {
